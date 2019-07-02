@@ -49,4 +49,8 @@ resource google_sql_database_instance master {
       update_track = "stable"
     }
   }
+
+  timeouts {
+    create = var.networking_private_ip_network != null ? "15m" : "10m"
+  }
 }
