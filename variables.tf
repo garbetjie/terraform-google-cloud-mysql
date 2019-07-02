@@ -92,3 +92,9 @@ variable "networking_authorized_networks" {
   default = []
   description = "CIDR notations of networks allowed access to the public IP address."
 }
+
+variable "enable_read_replica" {
+  type = bool
+  default = false
+  description = "Enable creation of a read-only replica of the master."
+}
