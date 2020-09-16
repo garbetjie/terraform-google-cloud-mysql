@@ -108,6 +108,27 @@ variable enable_high_availability {
   default = false
 }
 
+variable databases {
+  type = list(string)
+  default = []
+}
+
+variable users {
+  type = list(object({
+    username = string
+    password = string
+    host = string
+    privileges = map(list(string))
+  }))
+  default = []
+}
+
+variable add_name_suffix {
+  type = bool
+  default = true
+  description = "If true, adds a suffix to the name of all instances, to prevent name collisions."
+}
+
 locals {
   flags = merge(var.default_flags, var.flags)
 
@@ -117,5 +138,43 @@ locals {
         cidr = split(":", network)[0]
         name = length(split(":", network)) >= 2 ? split(":", network)[1] : format("terraform-managed-%s", substr(sha1(split(":", network)[0]), 0, 4))
       }
+  }
+
+  databases = {
+    for db in var.databases:
+      db => {
+        collation = "utf8mb4_unicode_ci"
+        charset = "utf8mb4"
+      }
+  }
+
+  users = {
+    for user in var.users:
+      format("%s@%s", user.username, lookup(user, "host", null) == null ? "%" : user.host) => {
+        username = user.username
+        password = lookup(user, "password", null) == null ? "" : user.password
+        host = lookup(user, "host", null) == null ? "%" : user.host
+        privileges = length(user.privileges) == 0 ? map("*", ["ALL"]) : user.privileges
+      }
+  }
+
+  _grants = flatten([
+    for user in local.users: [
+      for database, privileges in user.privileges: {
+        database = database
+        privileges = privileges
+        user = user.username
+        host = user.host
+      }
+    ]
+  ])
+
+  grants = {
+    for grant in local._grants:
+      format("%s@%s:%s", grant.user, grant.host, grant.database) => grant
+  }
+
+  user_password_lengths = {
+    "terraform@%" = 40
   }
 }
