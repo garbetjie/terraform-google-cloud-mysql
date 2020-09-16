@@ -1,6 +1,6 @@
 resource "google_sql_database_instance" "read_replica" {
   count = var.enable_read_replica ? 1 : 0
-  name = "${google_sql_database_instance.master.name}-readonly"
+  name = "${google_sql_database_instance.master.name}${var.read_replica_name_suffix}"
   region = var.region
   database_version = var.database_version
   master_instance_name = google_sql_database_instance.master.name

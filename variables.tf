@@ -98,6 +98,11 @@ variable enable_read_replica {
   description = "Enable creation of a read-only replica of the master."
 }
 
+variable read_replica_name_suffix {
+  type = string
+  default = "-readonly"
+}
+
 variable enable_high_availability {
   type = bool
   default = false
