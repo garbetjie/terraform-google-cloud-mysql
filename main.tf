@@ -19,6 +19,7 @@ resource google_sql_database_instance master {
     tier = var.tier
     user_labels = var.labels
     activation_policy = "ALWAYS"
+    availability_type = var.enable_high_availability ? "REGIONAL" : "ZONAL"
 
     dynamic "database_flags" {
       for_each = local.flags
@@ -30,8 +31,8 @@ resource google_sql_database_instance master {
     }
 
     backup_configuration {
-      binary_log_enabled = true
-      enabled = var.backups_enabled
+      binary_log_enabled = var.enable_high_availability ? true : var.backups_enabled
+      enabled = var.enable_high_availability ? true : var.backups_enabled
       start_time = var.backup_start_time
     }
 
