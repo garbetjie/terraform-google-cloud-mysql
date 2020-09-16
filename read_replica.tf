@@ -1,16 +1,9 @@
-resource random_id name_suffix {
-  byte_length = 2
-  keepers = {
-    name = var.name
-    region = var.region
-    database_version = var.database_version
-  }
-}
-
-resource google_sql_database_instance master {
-  name = "${var.name}-${random_id.name_suffix.hex}"
+resource "google_sql_database_instance" "read_replica" {
+  count = var.enable_read_replica ? 1 : 0
+  name = "${google_sql_database_instance.master.name}-readonly"
   region = var.region
   database_version = var.database_version
+  master_instance_name = google_sql_database_instance.master.name
 
   settings {
     disk_autoresize = var.disk_autoresize
@@ -29,10 +22,10 @@ resource google_sql_database_instance master {
       }
     }
 
+    // No backup required, as we're the readonly replica..
     backup_configuration {
-      binary_log_enabled = true
-      enabled = var.backups_enabled
-      start_time = var.backup_start_time
+      binary_log_enabled = false
+      enabled = false
     }
 
     ip_configuration {
@@ -50,13 +43,14 @@ resource google_sql_database_instance master {
     }
 
     maintenance_window {
-      day = 7
+      day = 2
       hour = 1
       update_track = "stable"
     }
   }
 
-  timeouts {
-    create = var.private_network_link != null ? "15m" : "10m"
+  replica_configuration {
+    connect_retry_interval = 30
+    failover_target = false
   }
 }

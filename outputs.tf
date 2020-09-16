@@ -1,15 +1,27 @@
-output "master_public_ip_address" {
-  value = var.networking_public_ip_enabled ? google_sql_database_instance.master.public_ip_address : null
+output master_address {
+  value = google_sql_database_instance.master.public_ip_address
 }
 
-output "master_private_ip_address" {
-  value = var.networking_private_ip_network != null ? google_sql_database_instance.master.private_ip_address : null
+output master_private_address {
+  value = google_sql_database_instance.master.private_ip_address
 }
 
-output "replica_public_ip_address" {
-  value = length(google_sql_database_instance.replica) > 0 ? google_sql_database_instance.replica[0].public_ip_address : null
+output master_name {
+  value = google_sql_database_instance.master.name
 }
 
-output "replica_private_ip_address" {
-  value = length(google_sql_database_instance.replica) > 0 ? google_sql_database_instance.replica[0].private_ip_address : null
+output flags {
+  value = local.flags
+}
+
+output readonly_replica_address {
+  value = length(google_sql_database_instance.read_replica) > 0 ? google_sql_database_instance.read_replica[0].public_ip_address : null
+}
+
+output readonly_replica_private_address {
+  value = length(google_sql_database_instance.read_replica) > 0 ? google_sql_database_instance.read_replica[0].private_ip_address : null
+}
+
+output readonly_replica_name {
+  value = length(google_sql_database_instance.read_replica) > 0 ? google_sql_database_instance.read_replica[0].name : null
 }
