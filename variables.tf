@@ -69,14 +69,14 @@ variable backups_enabled {
 }
 
 variable backup_start_time {
-  type = "string"
+  type = string
   default = "00:00"
   description = "The start of the 4 hour backup window (specified in UTC)."
 }
 
 variable ipv4_enabled {
   type = bool
-  default = false
+  default = true
   description = "Assign a public IP to this instance."
 }
 
@@ -87,7 +87,7 @@ variable private_network_link {
 }
 
 variable authorized_networks {
-  type = list(object({ name = string, cidr = string }))
+  type = list(string)
   default = []
   description = "CIDR notations of networks allowed access to the public IP address."
 }
