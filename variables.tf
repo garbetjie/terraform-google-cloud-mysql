@@ -113,6 +113,11 @@ variable databases {
   default = []
 }
 
+variable name_suffix_type {
+  type = string
+  default = "id"
+}
+
 variable users {
   type = list(object({
     username = string

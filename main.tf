@@ -7,8 +7,14 @@ resource random_id name_suffix {
   }
 }
 
+resource random_string master_suffix {
+  length = 4
+  special = false
+  upper = false
+}
+
 resource google_sql_database_instance master {
-  name = "${var.name}-${random_id.name_suffix.hex}"
+  name = "${var.name}-${lower(var.name_suffix_type) == "string" ? random_string.master_suffix.result : random_id.name_suffix.hex}"
   region = var.region
   database_version = var.database_version
 
