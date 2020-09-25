@@ -66,4 +66,8 @@ resource google_sql_database_instance master {
   timeouts {
     create = var.private_network_link != null ? "15m" : "10m"
   }
+
+  lifecycle {
+    ignore_changes = [settings[0].disk_size]
+  }
 }
