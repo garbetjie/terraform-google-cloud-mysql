@@ -21,11 +21,11 @@ locals {
 
   users = {
     for user in var.users:
-      format("%s@%s", user.username, lookup(user, "host", null) == null ? "%" : user.host) => {
+      format("%s@%s", user.username, user.host == null ? "%" : user.host) => {
         username = user.username
-        password = lookup(user, "password", null) == null ? "" : user.password
-        host = lookup(user, "host", null) == null ? "%" : user.host
-        privileges = length(user.privileges) == 0 ? map("*", ["ALL"]) : user.privileges
+        password = user.password == null ? "" : user.password
+        host = user.host == null ? "%" : user.host
+        privileges = user.privileges == null || length(user.privileges) == 0 ? map("*", ["ALL"]) : user.privileges
       }
   }
 
