@@ -25,7 +25,7 @@ locals {
         username = user.username
         password = user.password == null ? "" : user.password
         host = user.host == null ? "%" : user.host
-        privileges = user.privileges == null || length(user.privileges) == 0 ? map("*", ["ALL"]) : user.privileges
+        privileges = length(user.privileges == null ? {} : user.privileges) == 0 ? map("*", ["ALL"]) : user.privileges
       }
   }
 
