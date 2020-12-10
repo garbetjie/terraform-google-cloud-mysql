@@ -14,7 +14,7 @@ resource random_string master_suffix {
 }
 
 resource google_sql_database_instance master {
-  name = "${var.name}-${lower(var.name_suffix_type) == "string" ? random_string.master_suffix.result : random_id.name_suffix.hex}"
+  name = join("-", local.instance_name_suffix == "" ? [var.name] : [var.name, local.instance_name_suffix])
   region = var.region
   database_version = var.database_version
 
