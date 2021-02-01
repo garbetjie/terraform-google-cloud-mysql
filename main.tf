@@ -68,6 +68,10 @@ resource google_sql_database_instance master {
   }
 
   lifecycle {
-    ignore_changes = [settings[0].disk_size, settings[0].replication_type]
+    ignore_changes = [
+      settings[0].disk_size,
+      settings[0].replication_type,
+      settings[0].backup_configuration[0].location
+    ]
   }
 }
