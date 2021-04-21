@@ -10,7 +10,7 @@ variable region {
 
 variable database_version {
   type = string
-  default = "MYSQL_5_7"
+  default = "MYSQL_8_0"
   description = "Database's version of MySQL."
 }
 
@@ -121,9 +121,9 @@ variable name_suffix_type {
 variable users {
   type = list(object({
     username = string
-    password = string
-    host = string
-    privileges = map(list(string))
+    password = optional(string)
+    host = optional(string)
+    privileges = optional(map(list(string)))
   }))
   default = []
 }
