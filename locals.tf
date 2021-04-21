@@ -1,5 +1,13 @@
 locals {
-  flags = merge(var.default_flags, var.flags)
+  flags = {
+    for key, value in merge(var.default_flags, var.flags):
+      key => value
+    if !contains(lookup(local.disallowed_flags, var.database_version, []), key)
+  }
+
+  disallowed_flags = {
+    MYSQL_8_0 = ["query_cache_size", "query_cache_type"]
+  }
 
   instance_name_suffix = var.add_name_suffix ? (lower(var.name_suffix_type) == "string" ? random_string.master_suffix.result : random_id.name_suffix.hex) : ""
 
