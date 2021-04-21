@@ -118,15 +118,15 @@ variable name_suffix_type {
   default = "id"
 }
 
-variable users {
-  type = list(object({
-    username = string
-    password = optional(string)
-    host = optional(string)
-    privileges = optional(map(list(string)))
-  }))
-  default = []
-}
+//variable users {
+//  type = list(object({
+//    username = string
+//    password = optional(string)
+//    host = optional(string)
+//    privileges = optional(map(list(string)))
+//  }))
+//  default = []
+//}
 
 variable add_name_suffix {
   type = bool
