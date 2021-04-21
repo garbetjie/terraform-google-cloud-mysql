@@ -42,16 +42,16 @@ output readonly_replica_connection_name {
   value = length(google_sql_database_instance.read_replica) > 0 ? google_sql_database_instance.read_replica[0].connection_name : null
 }
 
-output users {
-  // We need to do it like this because as per https://www.terraform.io/docs/providers/mysql/r/user.html, the password
-  // is salted before being stored in the state.
-  value = [
-    for user in mysql_user.users: {
-      host = user.host
-      username = user.user
-      password = (local.users[format("%s@%s", user.user, user.host)].password == ""
-        ? random_password.user_passwords[format("%s@%s", user.user, user.host)].result
-        : local.users[format("%s@%s", user.user, user.host)].password)
-    }
-  ]
-}
+//output users {
+//  // We need to do it like this because as per https://www.terraform.io/docs/providers/mysql/r/user.html, the password
+//  // is salted before being stored in the state.
+//  value = [
+//    for user in mysql_user.users: {
+//      host = user.host
+//      username = user.user
+//      password = (local.users[format("%s@%s", user.user, user.host)].password == ""
+//        ? random_password.user_passwords[format("%s@%s", user.user, user.host)].result
+//        : local.users[format("%s@%s", user.user, user.host)].password)
+//    }
+//  ]
+//}

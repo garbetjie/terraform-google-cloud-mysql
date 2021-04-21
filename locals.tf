@@ -27,33 +27,33 @@ locals {
       }
   }
 
-  users = {
-    for user in var.users:
-      format("%s@%s", user.username, user.host == null ? "%" : user.host) => {
-        username = user.username
-        password = user.password == null ? "" : user.password
-        host = user.host == null ? "%" : user.host
-        privileges = length(user.privileges == null ? {} : user.privileges) == 0 ? map("*", ["ALL"]) : user.privileges
-      }
-  }
-
-  _grants = flatten([
-    for user in local.users: [
-      for database, privileges in user.privileges: {
-        database = database
-        privileges = privileges
-        user = user.username
-        host = user.host
-      }
-    ]
-  ])
-
-  grants = {
-    for grant in local._grants:
-      format("%s@%s:%s", grant.user, grant.host, grant.database) => grant
-  }
-
-  user_password_lengths = {
-    "terraform@%" = 40
-  }
+//  users = {
+//    for user in var.users:
+//      format("%s@%s", user.username, user.host == null ? "%" : user.host) => {
+//        username = user.username
+//        password = user.password == null ? "" : user.password
+//        host = user.host == null ? "%" : user.host
+//        privileges = length(user.privileges == null ? {} : user.privileges) == 0 ? map("*", ["ALL"]) : user.privileges
+//      }
+//  }
+//
+//  _grants = flatten([
+//    for user in local.users: [
+//      for database, privileges in user.privileges: {
+//        database = database
+//        privileges = privileges
+//        user = user.username
+//        host = user.host
+//      }
+//    ]
+//  ])
+//
+//  grants = {
+//    for grant in local._grants:
+//      format("%s@%s:%s", grant.user, grant.host, grant.database) => grant
+//  }
+//
+//  user_password_lengths = {
+//    "terraform@%" = 40
+//  }
 }
